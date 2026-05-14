@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "Astrology Super App",
+    "slug": "astrology-super-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "astrology-super-app",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.astrology.superapp"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#570005"
+      },
+      "package": "com.astrology.superapp"
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ]
+  }
+}
