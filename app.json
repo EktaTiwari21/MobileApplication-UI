@@ -21,7 +21,6 @@
       "bundler": "metro"
     },
     "plugins": [
-      "expo-router",
       "expo-font"
     ],
     "extra": {
@@ -30,6 +29,12 @@
         "projectId": "cd45fbeb-cf5a-43ed-80e3-84457a678294"
       }
     },
-    "owner": "chinmaya_shah"
+    "owner": "chinmaya_shah",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/cd45fbeb-cf5a-43ed-80e3-84457a678294"
+    }
   }
 }

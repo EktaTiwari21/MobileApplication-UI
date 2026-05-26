@@ -3,6 +3,9 @@
   "compilerOptions": {
     "strict": true,
     "skipLibCheck": true,
+    "jsx": "react-native",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "@/*": [
         "./src/*"

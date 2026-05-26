@@ -1,35 +1,33 @@
 import React, { useEffect } from "react";
-import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import { useKundaliStore } from "../../store/useKundaliStore";
 import { NorthIndianChart } from "../../components/NorthIndianChart";
+import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
+import Svg, { Path } from "react-native-svg";
+import { BlurView } from "expo-blur";
+import { LinearGradient } from "expo-linear-gradient";
+
+import { useNavigation } from "@react-navigation/native";
+
+const { width } = Dimensions.get("window");
 
 export const KundaliReportScreen = () => {
+  const navigation = useNavigation<any>();
   const { activeKundali, isLoading, error, currentProfile, setProfileAndFetch } = useKundaliStore();
 
-  useEffect(() => {
-    if (!activeKundali && !isLoading && !error) {
-      setProfileAndFetch({
-        native_name: "Aarav Sharma",
-        dob: "15/08/1995",
-        tob: "14:30",
-        location: "New Delhi, India",
-      });
-    }
-  }, []);
 
   if (isLoading) {
     return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#C5A059" />
-        <Text style={styles.loadingTitle}>Calculating Planetary Matrices...</Text>
-        <Text style={styles.loadingSubtitle}>Querying Swiss Ephemeris & Core Engines</Text>
+      <View style={[styles.centerContainer, { backgroundColor: "#f8fafc" }]}>
+        <ActivityIndicator size="large" color="#7c3aed" />
+        <Text style={[styles.loadingTitle, { color: "#7c3aed" }]}>CALCULATING VEDIC BLUEPRINT...</Text>
       </View>
     );
   }
 
   if (error) {
     return (
-      <View style={styles.centerContainer}>
+      <View style={[styles.centerContainer, { backgroundColor: "#f8fafc" }]}>
         <View style={styles.errorCard}>
           <Text style={styles.errorTitle}>Calculation Error</Text>
           <Text style={styles.errorMessage}>{error}</Text>
@@ -37,7 +35,7 @@ export const KundaliReportScreen = () => {
             style={styles.retryButton}
             onPress={() =>
               setProfileAndFetch(
-                currentProfile || { native_name: "Aarav Sharma", dob: "15/08/1995", tob: "14:30", location: "New Delhi, India" }
+                currentProfile || { native_name: "Aravind Sharma", dob: "14 Oct 1990", tob: "14:30", location: "New Delhi, India" }
               )
             }
           >
@@ -48,129 +46,125 @@ export const KundaliReportScreen = () => {
     );
   }
 
-  if (!activeKundali) return null;
+  if (!activeKundali) {
+    return (
+      <View style={[styles.centerContainer, { backgroundColor: "#f8fafc" }]}>
+        <Text style={{ fontSize: 16, color: "#64748b", marginBottom: 16 }}>No Kundali Data Found</Text>
+        <TouchableOpacity style={styles.retryButton} onPress={() => navigation.goBack()}>
+          <Text style={styles.retryButtonText}>GO BACK</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
-    <ScrollView style={styles.scrollContainer} contentContainerStyle={{ padding: 16 }}>
-      {/* Profile Header */}
-      <View style={styles.profileHeader}>
+    <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.contentContainer}>
+      
+      {/* Header Profile Info */}
+      <View style={styles.headerSection}>
+        <View style={styles.badgeContainer}>
+          <MaterialIcons name="workspace-premium" size={14} color="#db2777" />
+          <Text style={styles.badgeText}>VEDIC BLUEPRINT</Text>
+        </View>
         <Text style={styles.nativeName}>{activeKundali.native_name}</Text>
-        <Text style={styles.profileMeta}>
-          {activeKundali.dob} • {activeKundali.tob} • {activeKundali.location}
-        </Text>
-      </View>
-
-      {/* Chart */}
-      <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>RASI KUNDALI (NORTH INDIAN)</Text>
-        <NorthIndianChart houses={activeKundali.houses} ascendantSign={activeKundali.ascendant_sign} />
-      </View>
-
-      {/* Planetary Positions */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>PLANETARY POSITIONS</Text>
-        <View style={styles.tableHeader}>
-          <Text style={[styles.tableHeaderText, { width: "25%" }]}>Planet</Text>
-          <Text style={[styles.tableHeaderText, { width: "25%" }]}>Sign</Text>
-          <Text style={[styles.tableHeaderText, { width: "25%", textAlign: "center" }]}>House</Text>
-          <Text style={[styles.tableHeaderText, { width: "25%", textAlign: "right" }]}>Deg</Text>
+        <View style={styles.metaContainer}>
+          <MaterialIcons name="calendar-today" size={16} color="#64748b" />
+          <Text style={styles.metaText}>{activeKundali.dob}</Text>
+          <MaterialIcons name="location-on" size={16} color="#64748b" style={{ marginLeft: 12 }} />
+          <Text style={styles.metaText}>{activeKundali.location.split(',')[0]}</Text>
         </View>
-        {activeKundali.planets.map((p, idx) => (
-          <View key={`planet-${idx}`} style={styles.tableRow}>
-            <Text style={[styles.planetName, { width: "25%" }]}>
-              {p.name} {p.is_retrograde ? "[R]" : ""}
-            </Text>
-            <Text style={[styles.planetSign, { width: "25%" }]}>{p.sign}</Text>
-            <Text style={[styles.planetHouse, { width: "25%", textAlign: "center" }]}>{p.house}</Text>
-            <Text style={[styles.planetDeg, { width: "25%", textAlign: "right" }]}>
-              {p.sign_degrees.toFixed(1)}°
-            </Text>
+      </View>
+
+      {/* Chart Section */}
+      <View style={styles.chartSection}>
+        <LinearGradient colors={["#f3e8ff", "#e0e7ff"]} style={styles.chartContainer}>
+          <View style={styles.chartInner}>
+             <NorthIndianChart houses={activeKundali.houses} ascendantSign={activeKundali.ascendant_sign} />
           </View>
-        ))}
+        </LinearGradient>
       </View>
 
-      {/* Yogas */}
-      {activeKundali.yogas?.length > 0 && (
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>FORMED YOGAS</Text>
-          {activeKundali.yogas.map((yoga, i) => (
-            <View key={`yoga-${i}`} style={styles.yogaCard}>
-              <Text style={styles.yogaName}>{yoga.name}</Text>
-              <Text style={styles.yogaDesc}>{yoga.description}</Text>
-              <Text style={styles.yogaEffect}>{yoga.effects}</Text>
-            </View>
-          ))}
-        </View>
-      )}
 
-      {/* Doshas */}
-      {activeKundali.doshas?.length > 0 && (
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>DOSHA ANALYSIS</Text>
-          {activeKundali.doshas.map((dosha, i) => (
-            <View
-              key={`dosha-${i}`}
-              style={[styles.doshaCard, dosha.is_present ? styles.doshaPresent : styles.doshaAbsent]}
-            >
-              <View style={styles.doshaHeader}>
-                <Text style={styles.doshaName}>{dosha.name}</Text>
-                <Text style={[styles.doshaStatus, { color: dosha.is_present ? "#7B1113" : "rgba(255,255,255,0.4)" }]}>
-                  {dosha.is_present ? "Detected" : "Not Present"}
-                </Text>
-              </View>
-              <Text style={styles.doshaDesc}>{dosha.description}</Text>
-            </View>
-          ))}
-        </View>
-      )}
 
-      {/* Current Dasha */}
-      {activeKundali.dasha_current && (
-        <View style={styles.dashaCard}>
-          <Text style={styles.dashaLabel}>RUNNING MAHADASHA</Text>
-          <Text style={styles.dashaValue}>{activeKundali.dasha_current}</Text>
-        </View>
-      )}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  scrollContainer: { flex: 1, backgroundColor: "#1E1E1E" },
-  centerContainer: { flex: 1, backgroundColor: "#1E1E1E", justifyContent: "center", alignItems: "center", padding: 24 },
-  loadingTitle: { color: "#C5A059", marginTop: 16, letterSpacing: 2, textTransform: "uppercase", textAlign: "center", fontSize: 13 },
-  loadingSubtitle: { color: "rgba(255,255,255,0.6)", marginTop: 4, fontSize: 11, textAlign: "center" },
-  errorCard: { backgroundColor: "rgba(87,0,5,0.4)", borderWidth: 1, borderColor: "#7B1113", borderRadius: 24, padding: 16, width: "100%", alignItems: "center" },
-  errorTitle: { color: "#fff", fontWeight: "bold", fontSize: 15, marginBottom: 4 },
-  errorMessage: { color: "rgba(255,255,255,0.8)", fontSize: 11, textAlign: "center", marginBottom: 16 },
-  retryButton: { backgroundColor: "#7B1113", paddingHorizontal: 20, paddingVertical: 10, borderRadius: 999, borderWidth: 1, borderColor: "rgba(197,160,89,0.4)" },
-  retryButtonText: { color: "#C5A059", fontWeight: "bold", fontSize: 11, letterSpacing: 1.5 },
-  profileHeader: { marginBottom: 24, alignItems: "center" },
-  nativeName: { fontSize: 24, color: "#fff", fontWeight: "bold" },
-  profileMeta: { fontSize: 11, color: "#C5A059", marginTop: 4 },
-  sectionContainer: { marginBottom: 24 },
-  sectionTitle: { fontSize: 12, color: "rgba(255,255,255,0.6)", letterSpacing: 2, marginBottom: 8 },
-  card: { marginBottom: 24, backgroundColor: "rgba(30,30,30,0.75)", borderRadius: 24, padding: 16, borderWidth: 1, borderColor: "rgba(255,255,255,0.1)" },
-  cardTitle: { fontSize: 12, color: "#C5A059", letterSpacing: 2, marginBottom: 12 },
-  tableHeader: { flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "rgba(255,255,255,0.1)", paddingBottom: 8, marginBottom: 8 },
-  tableHeaderText: { fontSize: 11, color: "rgba(255,255,255,0.6)" },
-  tableRow: { flexDirection: "row", paddingVertical: 6, alignItems: "center" },
-  planetName: { fontSize: 12, color: "#fff", fontWeight: "bold" },
-  planetSign: { fontSize: 12, color: "rgba(255,255,255,0.8)" },
-  planetHouse: { fontSize: 12, color: "#C5A059" },
-  planetDeg: { fontSize: 12, color: "rgba(255,255,255,0.6)" },
-  yogaCard: { backgroundColor: "rgba(30,30,30,0.75)", borderRadius: 24, padding: 12, marginBottom: 8, borderLeftWidth: 4, borderLeftColor: "#C5A059" },
-  yogaName: { fontSize: 12, color: "#fff", fontWeight: "bold" },
-  yogaDesc: { fontSize: 11, color: "rgba(255,255,255,0.6)", marginTop: 2 },
-  yogaEffect: { fontSize: 11, color: "#C5A059", marginTop: 4, fontStyle: "italic" },
-  doshaCard: { borderRadius: 24, padding: 12, marginBottom: 8, borderWidth: 1 },
-  doshaPresent: { backgroundColor: "rgba(87,0,5,0.2)", borderColor: "#7B1113" },
-  doshaAbsent: { backgroundColor: "rgba(30,30,30,0.75)", borderColor: "rgba(255,255,255,0.1)" },
-  doshaHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  doshaName: { fontSize: 12, color: "#fff", fontWeight: "bold" },
-  doshaStatus: { fontSize: 12, fontWeight: "bold" },
-  doshaDesc: { fontSize: 11, color: "rgba(255,255,255,0.7)", marginTop: 4 },
-  dashaCard: { backgroundColor: "rgba(87,0,5,0.3)", borderRadius: 24, padding: 16, borderWidth: 1, borderColor: "rgba(197,160,89,0.4)", alignItems: "center", marginBottom: 32 },
-  dashaLabel: { fontSize: 11, color: "#C5A059", letterSpacing: 1.5 },
-  dashaValue: { fontSize: 16, color: "#fff", fontWeight: "bold", marginTop: 2 },
+  scrollContainer: { flex: 1, backgroundColor: "#f8fafc" },
+  contentContainer: { padding: 24, paddingBottom: 100 },
+  centerContainer: { flex: 1, justifyContent: "center", alignItems: "center", padding: 24 },
+  loadingTitle: { marginTop: 16, letterSpacing: 2, fontSize: 13, fontWeight: "600" },
+  errorCard: { backgroundColor: "#fef2f2", borderWidth: 1, borderColor: "#ef4444", borderRadius: 24, padding: 16, width: "100%", alignItems: "center" },
+  errorTitle: { color: "#b91c1c", fontWeight: "bold", fontSize: 15, marginBottom: 4 },
+  errorMessage: { color: "#991b1b", fontSize: 13, textAlign: "center", marginBottom: 16 },
+  retryButton: { backgroundColor: "#ef4444", paddingHorizontal: 20, paddingVertical: 10, borderRadius: 999 },
+  retryButtonText: { color: "#ffffff", fontWeight: "bold", fontSize: 11, letterSpacing: 1.5 },
+  
+  headerSection: { alignItems: "center", marginTop: 16, marginBottom: 40 },
+  badgeContainer: { flexDirection: "row", alignItems: "center", backgroundColor: "rgba(219,39,119,0.1)", paddingHorizontal: 12, paddingVertical: 4, borderRadius: 999, borderWidth: 1, borderColor: "rgba(219,39,119,0.2)", marginBottom: 12 },
+  badgeText: { fontSize: 12, fontWeight: "bold", color: "#db2777", marginLeft: 6, letterSpacing: 1 },
+  nativeName: { fontSize: 34, fontWeight: "700", color: "#1e293b", marginBottom: 8 },
+  metaContainer: { flexDirection: "row", alignItems: "center" },
+  metaText: { fontSize: 16, color: "#64748b", marginLeft: 4, fontWeight: "500" },
+
+  chartSection: { alignItems: "center", marginBottom: 40 },
+  chartContainer: { width: width * 0.85, height: width * 0.85, maxWidth: 340, maxHeight: 340, borderRadius: 16, padding: 4, elevation: 12, shadowColor: "#7c3aed", shadowOpacity: 0.2, shadowRadius: 24, justifyContent: "center", alignItems: "center" },
+  chartInner: { width: "100%", height: "100%", backgroundColor: "#ffffff", borderRadius: 12, overflow: "hidden" },
+
+  section: { marginBottom: 40 },
+  sectionTitle: { fontSize: 20, fontWeight: "bold", color: "#1e293b", marginBottom: 16 },
+  
+  numeroCard: { width: "31%", borderRadius: 16, padding: 12, alignItems: "center", elevation: 6, shadowColor: "#4c1d95", shadowOpacity: 0.2, shadowRadius: 8 },
+  numeroLabel: { fontSize: 11, color: "rgba(255,255,255,0.8)", fontWeight: "600", textTransform: "uppercase" },
+  numeroValue: { fontSize: 36, fontWeight: "bold", color: "#ffffff", marginVertical: 4 },
+  numeroDesc: { fontSize: 11, color: "rgba(255,255,255,0.9)", textAlign: "center" },
+
+  planetScroll: { paddingRight: 24, gap: 12 },
+  planetCard: { borderWidth: 1, borderColor: "rgba(148,163,184,0.2)", borderRadius: 12, padding: 12, width: 140, shadowColor: "#000", shadowOpacity: 0.04, shadowRadius: 8, elevation: 2, position: "relative", overflow: "hidden", marginRight: 12 },
+  planetAccent: { position: "absolute", left: 0, top: 0, bottom: 0, width: 4 },
+  planetHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", width: "100%" },
+  planetName: { fontSize: 14, fontWeight: "bold", color: "#1e293b" },
+  planetFooter: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-end", marginTop: 12 },
+  planetSign: { fontSize: 13, color: "#64748b" },
+  planetDeg: { fontSize: 16, fontWeight: "bold" },
+
+  dashaHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "baseline", marginBottom: 16 },
+  dashaCurrentText: { fontSize: 14, fontWeight: "bold", color: "#db2777", letterSpacing: 0.5 },
+  timelineScroll: { paddingVertical: 12, position: "relative" },
+  timelineLine: { position: "absolute", top: "35%", left: 0, right: 0, height: 2, backgroundColor: "#cbd5e1" },
+  timelineNode: { alignItems: "center", width: 90 },
+  nodeDot: { width: 12, height: 12, borderRadius: 6, borderWidth: 2, marginBottom: 8, zIndex: 10, backgroundColor: "#f8fafc" },
+  nodePast: { backgroundColor: "#e2e8f0", borderColor: "#94a3b8" },
+  nodeLabelPast: { fontSize: 12, fontWeight: "600", color: "#64748b" },
+  nodeDatePast: { fontSize: 10, color: "#94a3b8", marginTop: 2 },
+  nodeCurrent: { backgroundColor: "#db2777", borderColor: "#f8fafc", width: 16, height: 16, borderRadius: 8 },
+  nodePulse: { position: "absolute", top: -4, width: 24, height: 24, borderRadius: 12, backgroundColor: "rgba(219,39,119,0.2)", zIndex: 1 },
+  nodeLabelCurrent: { fontSize: 14, fontWeight: "bold", color: "#db2777" },
+  nodeDateCurrent: { fontSize: 11, color: "#db2777", marginTop: 2 },
+  nodeFuture: { borderColor: "#f59e0b" },
+  nodeFuture2: { borderColor: "#94a3b8" },
+  nodeLabelFuture: { fontSize: 12, fontWeight: "600", color: "#1e293b" },
+  nodeDateFuture: { fontSize: 10, color: "#64748b", marginTop: 2 },
+
+  doshaGrid: { gap: 16 },
+  doshaCard: { borderRadius: 16, padding: 20, flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: "#ffffff", borderWidth: 1, borderColor: "rgba(148,163,184,0.2)", shadowColor: "#94a3b8", shadowOpacity: 0.1, shadowRadius: 16, overflow: "hidden" },
+  doshaContent: { flex: 1, paddingRight: 16 },
+  doshaCardHeader: { flexDirection: "row", alignItems: "center", marginBottom: 4 },
+  doshaName: { fontSize: 18, fontWeight: "bold", color: "#db2777" },
+  doshaBadge: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999, marginLeft: 8 },
+  doshaBadgeHigh: { backgroundColor: "rgba(219,39,119,0.1)" },
+  doshaBadgeLow: { backgroundColor: "#f1f5f9" },
+  doshaBadgeText: { fontSize: 10, fontWeight: "bold", letterSpacing: 1 },
+  doshaDesc: { fontSize: 13, color: "#64748b", marginTop: 4, lineHeight: 18 },
+  gaugeContainer: { width: 64, height: 64, position: "relative" },
+  gaugeCenter: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, justifyContent: "center", alignItems: "center" },
+  gaugeText: { fontSize: 14, fontWeight: "bold" },
+
+  gemContainer: { gap: 12 },
+  gemCard: { flexDirection: "row", alignItems: "center", padding: 16, borderRadius: 16, elevation: 6 },
+  gemIconWrap: { width: 48, height: 48, borderRadius: 24, backgroundColor: "rgba(255,255,255,0.1)", justifyContent: "center", alignItems: "center", marginRight: 16 },
+  gemContent: { flex: 1 },
+  gemTitle: { fontSize: 16, fontWeight: "bold", color: "#ffffff", marginBottom: 4 },
+  gemDesc: { fontSize: 13, color: "rgba(255,255,255,0.7)" },
 });
