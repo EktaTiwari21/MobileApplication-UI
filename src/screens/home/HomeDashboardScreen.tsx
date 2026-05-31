@@ -67,7 +67,7 @@ export const HomeDashboardScreen = ({ navigation }: { navigation: any }) => {
           <Text style={styles.quickActionText}>Matching</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.quickActionBtn}>
+        <TouchableOpacity style={styles.quickActionBtn} onPress={() => navigation.navigate("MahuratDetail")}>
           <View style={[styles.quickActionIconBg, { padding: 0, backgroundColor: 'transparent', overflow: 'hidden' }]}>
             <Image 
               source={require("../../assets/images/mahurat-icon.png")} 
@@ -77,7 +77,7 @@ export const HomeDashboardScreen = ({ navigation }: { navigation: any }) => {
           <Text style={styles.quickActionText}>Mahurat</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.quickActionBtn}>
+        <TouchableOpacity style={styles.quickActionBtn} onPress={() => navigation.navigate("HoroscopeDetail")}>
           <View style={[styles.quickActionIconBg, { padding: 0, backgroundColor: 'transparent', overflow: 'hidden' }]}>
             <Image 
               source={require("../../assets/images/horoscope-icon.png")} 
@@ -87,7 +87,7 @@ export const HomeDashboardScreen = ({ navigation }: { navigation: any }) => {
           <Text style={styles.quickActionText}>Horoscope</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.quickActionBtn}>
+        <TouchableOpacity style={styles.quickActionBtn} onPress={() => navigation.navigate("NumerologyDetail")}>
           <View style={[styles.quickActionIconBg, { padding: 0, backgroundColor: 'transparent', overflow: 'hidden' }]}>
             <Image 
               source={require("../../assets/images/numerology-icon.png")} 
@@ -97,7 +97,7 @@ export const HomeDashboardScreen = ({ navigation }: { navigation: any }) => {
           <Text style={styles.quickActionText} numberOfLines={2}>Numerology</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.quickActionBtn}>
+        <TouchableOpacity style={styles.quickActionBtn} onPress={() => navigation.navigate("VastuAudit")}>
           <View style={[styles.quickActionIconBg, { padding: 0, backgroundColor: 'transparent', overflow: 'hidden' }]}>
             <Image 
               source={require("../../assets/images/vastu-icon.png")} 
@@ -107,7 +107,7 @@ export const HomeDashboardScreen = ({ navigation }: { navigation: any }) => {
           <Text style={styles.quickActionText} numberOfLines={2}>Vastu</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.quickActionBtn}>
+        <TouchableOpacity style={styles.quickActionBtn} onPress={() => navigation.navigate("HinduCalendarDetail")}>
           <View style={[styles.quickActionIconBg, { padding: 0, backgroundColor: 'transparent', overflow: 'hidden' }]}>
             <Image 
               source={require("../../assets/images/ganesh-icon.png")} 
@@ -117,7 +117,7 @@ export const HomeDashboardScreen = ({ navigation }: { navigation: any }) => {
           <Text style={styles.quickActionText} numberOfLines={2}>Hindu Calendar</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.quickActionBtn}>
+        <TouchableOpacity style={styles.quickActionBtn} onPress={() => navigation.navigate("DailyTarotDetail")}>
           <View style={[styles.quickActionIconBg, { padding: 0, backgroundColor: 'transparent', overflow: 'hidden' }]}>
             <Image 
               source={require("../../assets/images/tarot-icon.png")} 
@@ -127,6 +127,35 @@ export const HomeDashboardScreen = ({ navigation }: { navigation: any }) => {
           <Text style={styles.quickActionText} numberOfLines={2}>Daily Tarot</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Daily Panchang Widget Card */}
+      <TouchableOpacity style={styles.panchangCard} onPress={() => navigation.navigate("PanchangDetail")}>
+        <View style={styles.panchangHeader}>
+          <Text style={styles.panchangTitle}>Daily Panchang</Text>
+          <View style={styles.panchangLocationBadge}>
+            <Text style={styles.panchangLocationText}>New Delhi, India</Text>
+          </View>
+        </View>
+
+        <View style={styles.panchangGrid}>
+          <View style={styles.panchangCol}>
+            <Text style={styles.panchangLabel}>TITHI</Text>
+            <Text style={styles.panchangValue}>Shukla Ekadashi</Text>
+          </View>
+          <View style={styles.panchangCol}>
+            <Text style={styles.panchangLabel}>NAKSHATRA</Text>
+            <Text style={styles.panchangValue}>Pushya</Text>
+          </View>
+        </View>
+
+        <View style={styles.rahuKaalBanner}>
+          <Text style={styles.rahuKaalLabel}>Rahu Kaal</Text>
+          <Text style={styles.rahuKaalTime}>01:30 PM - 03:00 PM</Text>
+          <View style={styles.rahuKaalBadge}>
+            <Text style={styles.rahuKaalBadgeText}>Inauspicious</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
 
       {/* NEW: E-Commerce Store Section (Auto-scrolling) */}
       <View style={styles.storeSection}>
@@ -207,6 +236,26 @@ export const HomeDashboardScreen = ({ navigation }: { navigation: any }) => {
               <View>
                 <Text style={[styles.serviceTitle, { color: "#ffffff" }]}>Gemstone Store</Text>
                 <Text style={[styles.serviceDesc, { color: "rgba(255,255,255,0.9)" }]}>Authentic astrological remedies</Text>
+              </View>
+            </View>
+            <MaterialIcons name="arrow-forward" size={20} color="#ffffff" />
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+
+      {/* AstroGPT AI Chatbot Card */}
+      <View style={styles.section}>
+        <TouchableOpacity style={styles.serviceBanner} onPress={() => navigation.navigate("AstroChat")}>
+          <LinearGradient colors={["#7c3aed", "#db2777"]} style={styles.serviceBannerGradient}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={styles.serviceBannerIcon}>
+                <MaterialIcons name="auto-awesome" size={24} color="#7c3aed" />
+              </View>
+              <View style={{ width: "70%" }}>
+                <Text style={[styles.serviceTitle, { color: "#ffffff" }]}>Talk to AstroGPT</Text>
+                <Text style={[styles.serviceDesc, { color: "rgba(255,255,255,0.9)" }]} numberOfLines={2}>
+                  Ask personalized questions about career, love, and planetary remedies.
+                </Text>
               </View>
             </View>
             <MaterialIcons name="arrow-forward" size={20} color="#ffffff" />

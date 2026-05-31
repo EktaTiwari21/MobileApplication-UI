@@ -11,9 +11,19 @@ import { HomeDashboardScreen } from "./src/screens/home/HomeDashboardScreen";
 import { KundaliInputScreen } from "./src/screens/kundali/KundaliInputScreen";
 import { KundaliReportScreen } from "./src/screens/kundali/KundaliReportScreen";
 import { MatchScreen } from "./src/screens/match/MatchScreen";
+import { MatchReportScreen } from "./src/screens/match/MatchReportScreen";
 import { ProfileScreen } from "./src/screens/profile/ProfileScreen";
 import { SpiritualStoreScreen } from "./src/screens/store/SpiritualStoreScreen";
 import { CategoryProductsScreen } from "./src/screens/store/CategoryProductsScreen";
+import { AstroChatScreen } from "./src/screens/ai/AstroChatScreen";
+import { PanchangDetailScreen } from "./src/screens/panchang/PanchangDetailScreen";
+import { HoroscopeDetailScreen } from "./src/screens/home/HoroscopeDetailScreen";
+import { VastuAuditScreen } from "./src/screens/vastu/VastuAuditScreen";
+import { MahuratDetailScreen } from "./src/screens/panchang/MahuratDetailScreen";
+import { NumerologyDetailScreen } from "./src/screens/kundali/NumerologyDetailScreen";
+import { HinduCalendarDetailScreen } from "./src/screens/panchang/HinduCalendarDetailScreen";
+import { DailyTarotDetailScreen } from "./src/screens/home/DailyTarotDetailScreen";
+
 
 import { LoginScreen } from "./src/screens/auth/LoginScreen";
 import { SignupScreen } from "./src/screens/auth/SignupScreen";
@@ -65,6 +75,24 @@ function HomeStack() {
       <Stack.Screen name="HomeDashboard" component={HomeDashboardScreen} />
       <Stack.Screen name="SpiritualStore" component={SpiritualStoreScreen} />
       <Stack.Screen name="CategoryProducts" component={CategoryProductsScreen} />
+      <Stack.Screen name="AstroChat" component={AstroChatScreen} />
+      <Stack.Screen name="PanchangDetail" component={PanchangDetailScreen} />
+      <Stack.Screen name="HoroscopeDetail" component={HoroscopeDetailScreen} />
+      <Stack.Screen name="VastuAudit" component={VastuAuditScreen} />
+      <Stack.Screen name="MahuratDetail" component={MahuratDetailScreen} />
+      <Stack.Screen name="NumerologyDetail" component={NumerologyDetailScreen} />
+      <Stack.Screen name="HinduCalendarDetail" component={HinduCalendarDetailScreen} />
+      <Stack.Screen name="DailyTarotDetail" component={DailyTarotDetailScreen} />
+    </Stack.Navigator>
+  );
+}
+
+// Create a Stack for the Match tab so we can navigate to MatchReport
+function MatchStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "#f8fafc" } }}>
+      <Stack.Screen name="MatchInput" component={MatchScreen} />
+      <Stack.Screen name="MatchReport" component={MatchReportScreen} />
     </Stack.Navigator>
   );
 }
@@ -118,7 +146,7 @@ function MainApp() {
     >
       <Tab.Screen name="Daily" component={HomeStack} />
       <Tab.Screen name="Charts" component={ChartsStack} />
-      <Tab.Screen name="Match" component={MatchScreen} />
+      <Tab.Screen name="Match" component={MatchStack} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );

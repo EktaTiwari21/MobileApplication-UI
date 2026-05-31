@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "Astrology Super App",
-    "slug": "astrology-super-app",
+    "name": "AstroPrecise",
+    "slug": "astroprecise-hub",
+    "privacy": "public",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "astrology-super-app",
+    "scheme": "astroprecise-hub",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "ios": {
@@ -26,15 +27,14 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "cd45fbeb-cf5a-43ed-80e3-84457a678294"
+        "projectId": "4b363a39-aeed-439d-860b-b696d735f720"
       }
     },
-    "owner": "chinmaya_shah",
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
+    "runtimeVersion": "1.0.0",
     "updates": {
-      "url": "https://u.expo.dev/cd45fbeb-cf5a-43ed-80e3-84457a678294"
-    }
+      "enabled": true,
+      "url": "https://u.expo.dev/4b363a39-aeed-439d-860b-b696d735f720"
+    },
+    "owner": "ekta2112"
   }
 }
